@@ -19,64 +19,41 @@ echo [INFO] Starting Pupurka Command Line Terminal... >> %LOGFILE%
 
 :boot
 cls
-:: Setup ANSI colors for cool effects
-for /F %%a in ('echo prompt $E ^| cmd') do set "ESC=%%a"
-set "RED=%ESC%[91m"
-set "GREEN=%ESC%[92m"
-set "YELLOW=%ESC%[93m"
-set "CYAN=%ESC%[96m"
-set "RESET=%ESC%[0m"
-
-echo %CYAN%Pupurka BIOS (C) 2026%RESET%
-echo %CYAN%Checking RAM... 16384M OK%RESET%
-ping localhost -n 2 >nul
+color 0A
 echo.
-echo %GREEN%[ OK ]%RESET% Booting Pupurka Kernel v1.0.0...
-ping localhost -n 1 >nul
-echo %GREEN%[ OK ]%RESET% Mounting virtual filesystems...
-ping localhost -n 1 >nul
-echo %RED%[FAIL]%RESET% %RED%ERROR: Failed to mount /dev/sda2 (Corrupted)%RESET%
+echo  PUPURKA BIOS v2.44 (C) 2026
+echo  Main Processor: Pupurka Quantum Core
+echo  Memory Testing: 32768K OK
+echo  Detecting Primary Master... [OK]
+echo.
 ping localhost -n 2 >nul
-echo %YELLOW%[WARN]%RESET% %YELLOW%Running fsck on /dev/sda2...%RESET%
+
+:: Эффект ошибки - меняем цвет всей консоли на красный
+color 0C
+echo  [!] CRITICAL ERROR: BOOT SECTOR CORRUPTED
+echo  [!] KERNEL PANIC: 0x0000007B
+echo  [!] ATTEMPTING TO RECOVER...
 ping localhost -n 2 >nul
-echo %GREEN%[ OK ]%RESET% File system repaired and mounted.
-ping localhost -n 1 >nul
-echo %GREEN%[ OK ]%RESET% Initializing network interfaces...
-ping localhost -n 1 >nul
-echo %RED%[FAIL]%RESET% %RED%FATAL: IPv6 configuration failed!%RESET%
+
+:: Эффект предупреждения - меняем цвет на желтый
+color 0E
+echo  [*] BYPASSING SECURITY PROTOCOLS...
+echo  [*] REBUILDING FILE SYSTEM INDEX...
 ping localhost -n 2 >nul
-echo %YELLOW%[WARN]%RESET% %YELLOW%Switching to IPv4 fallback mode...%RESET%
-ping localhost -n 1 >nul
-echo %GREEN%[ OK ]%RESET% Network interface started successfully.
+
+:: Возвращаем хакерский зеленый цвет
+color 0A
+echo  [+] RECOVERY SUCCESSFUL. SYSTEM STABILIZED.
 ping localhost -n 2 >nul
 echo.
 
-echo %CYAN%exiting . . . . . . .. . . . . .. . . . . . . . .%RESET%
-ping localhost -n 2 >nul
-echo %CYAN%exiting . . . . . . .. . . . . .. . . . . . . . .%RESET%
-ping localhost -n 2 >nul
-echo.
-
-<nul set /p ="%YELLOW%Loading system assets: %RESET%"
-:: Цикл от 1 до 100. Каждые 10 чисел скрипт делает паузу в 1 секунду.
-:: Вместе с предыдущими паузами общая загрузка занимает около 10-12 секунд.
-for /l %%i in (1,1,100) do (
-    <nul set /p ="%%i "
-    set /a "mod=%%i %% 10"
-    if !mod!==0 (
-        ping localhost -n 2 >nul
-    ) else (
-        for /l %%j in (1,1,1500) do rem
-    )
-)
-echo.
-echo.
-echo %GREEN%[ OK ] System loaded successfully.%RESET%
+echo  [ OK ] SYSTEM FULLY OPERATIONAL.
 ping localhost -n 2 >nul
 goto menu
 
 :menu
 cls
+color 0A
 echo.
 echo  ================================================================
 echo.
