@@ -49,7 +49,7 @@ echo  ^|  ___/ ^| ^| ^| ^| ^|  ___/ ^| ^| ^| ^| ^|  _ ^<  ^|  ^<     / ___ \
 echo  ^| ^|     ^| ^|_^| ^| ^| ^|     ^| ^|_^| ^| ^| ^|_) ^| ^| . \   / /   \ \
 echo  ^|_^|      \___/  ^|_^|      \___/  ^|____/  ^|_^|\_\ /_/     \_\
 echo.
-echo main-v1.0.0-pupurka
+echo main-v1.0.3-pupurka
 echo.
 echo   [1] Start Scan
 echo   [2] Configuration
