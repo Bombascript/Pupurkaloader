@@ -19,35 +19,35 @@ echo [INFO] Starting Pupurka Command Line Terminal... >> %LOGFILE%
 
 :boot
 cls
-color 0A
+:: Setup ANSI colors for cool effects
+for /F %%a in ('echo prompt $E ^| cmd') do set "ESC=%%a"
+set "RED=%ESC%[91m"
+set "GREEN=%ESC%[92m"
+set "YELLOW=%ESC%[93m"
+set "CYAN=%ESC%[96m"
+set "RESET=%ESC%[0m"
+
+echo %CYAN%PUPURKA BIOS v2.44 (C) 2026%RESET%
+echo %CYAN%Main Processor: Pupurka Quantum Core%RESET%
+echo %CYAN%Memory Testing: 32768K OK%RESET%
+echo %CYAN%Detecting Primary Master... [OK]%RESET%
 echo.
-echo  PUPURKA BIOS v2.44 (C) 2026
-echo  Main Processor: Pupurka Quantum Core
-echo  Memory Testing: 32768K OK
-echo  Detecting Primary Master... [OK]
-echo.
 ping localhost -n 2 >nul
 
-:: Эффект ошибки - меняем цвет всей консоли на красный
-color 0C
-echo  [!] CRITICAL ERROR: BOOT SECTOR CORRUPTED
-echo  [!] KERNEL PANIC: 0x0000007B
-echo  [!] ATTEMPTING TO RECOVER...
+echo %RED%[!] CRITICAL ERROR: BOOT SECTOR CORRUPTED%RESET%
+echo %RED%[!] KERNEL PANIC: 0x0000007B%RESET%
+echo %RED%[!] ATTEMPTING TO RECOVER...%RESET%
 ping localhost -n 2 >nul
 
-:: Эффект предупреждения - меняем цвет на желтый
-color 0E
-echo  [*] BYPASSING SECURITY PROTOCOLS...
-echo  [*] REBUILDING FILE SYSTEM INDEX...
+echo %YELLOW%[*] BYPASSING SECURITY PROTOCOLS...%RESET%
+echo %YELLOW%[*] REBUILDING FILE SYSTEM INDEX...%RESET%
 ping localhost -n 2 >nul
 
-:: Возвращаем хакерский зеленый цвет
-color 0A
-echo  [+] RECOVERY SUCCESSFUL. SYSTEM STABILIZED.
+echo %GREEN%[+] RECOVERY SUCCESSFUL. SYSTEM STABILIZED.%RESET%
 ping localhost -n 2 >nul
 echo.
 
-echo  [ OK ] SYSTEM FULLY OPERATIONAL.
+echo %GREEN%[ OK ] SYSTEM FULLY OPERATIONAL.%RESET%
 ping localhost -n 2 >nul
 goto menu
 
