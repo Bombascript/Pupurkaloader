@@ -136,7 +136,7 @@ echo  ================================================================
 echo.
 echo      [1] Start Scan                [4] Exit
 echo      [2] Configuration             [5] Modules
-echo      [3] Update
+echo      [3] Update                    [6] Logout (Delete Key)
 echo.
 echo  ================================================================
 echo.
@@ -147,6 +147,7 @@ if "%choice%"=="2" goto config
 if "%choice%"=="3" goto update
 if "%choice%"=="4" goto exit_app
 if "%choice%"=="5" goto modules
+if "%choice%"=="6" goto logout
 if /i "%choice%"=="clear" goto menu
 if /i "%choice%"=="exit" goto exit_app
 
@@ -270,6 +271,16 @@ if defined selected_mod (
     ping localhost -n 2 >nul
     goto modules
 )
+
+:logout
+echo [INFO] User logged out and deleted key >> %LOGFILE%
+echo.
+echo  [*] Deleting license key...
+if exist pupurka_key.dat del pupurka_key.dat
+ping localhost -n 1 >nul
+echo  [+] Key deleted successfully.
+ping localhost -n 1 >nul
+goto exit_app
 
 :exit_app
 echo [INFO] Application closed normally. >> %LOGFILE%
