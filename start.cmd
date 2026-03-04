@@ -7,6 +7,9 @@ color 0A
 set LOGFILE=pupurka_log_%date:~-4,4%%date:~-10,2%%date:~-7,2%_%time:~0,2%%time:~3,2%%time:~6,2%.txt
 set LOGFILE=%LOGFILE: =0%
 
+:: Create module folder if it doesn't exist
+if not exist "module" mkdir "module"
+
 echo ======================================== > %LOGFILE%
 echo Pupurka Terminal Startup Log >> %LOGFILE%
 echo Date: %date% Time: %time% >> %LOGFILE%
@@ -49,12 +52,13 @@ echo  ^|  ___/ ^| ^| ^| ^| ^|  ___/ ^| ^| ^| ^| ^|  _ ^<  ^|  ^<     / ___ \
 echo  ^| ^|     ^| ^|_^| ^| ^| ^|     ^| ^|_^| ^| ^| ^|_) ^| ^| . \   / /   \ \
 echo  ^|_^|      \___/  ^|_^|      \___/  ^|____/  ^|_^|\_\ /_/     \_\
 echo.
-echo main-v1.0.3-pupurka
+echo main-v1.0.0-pupurka
 echo.
 echo   [1] Start Scan
 echo   [2] Configuration
 echo   [3] Update
 echo   [4] Exit
+echo   [5] Modules
 echo.
 
 set /p choice="root@pupurka:~# "
@@ -63,6 +67,7 @@ if "%choice%"=="1" goto scan
 if "%choice%"=="2" goto config
 if "%choice%"=="3" goto update
 if "%choice%"=="4" goto exit_app
+if "%choice%"=="5" goto modules
 if /i "%choice%"=="clear" goto menu
 if /i "%choice%"=="exit" goto exit_app
 
@@ -131,6 +136,55 @@ echo [ERROR] Failed to download update. Check your internet connection or server
 echo [ERROR] Update failed. >> %LOGFILE%
 pause
 goto menu
+
+:modules
+cls
+echo [INFO] User opened modules menu >> %LOGFILE%
+echo.
+echo ========================================
+echo             AVAILABLE MODULES
+echo ========================================
+echo.
+
+set count=0
+for %%f in (module\*.py) do (
+    set /a count+=1
+    set "mod!count!=%%~nxf"
+    echo   [!count!] %%~nxf
+)
+
+if !count!==0 (
+    echo   No Python modules found in the 'module' folder.
+    echo   Please add some .py files to the folder.
+)
+
+echo.
+echo   [0] Back to Main Menu
+echo.
+set /p mod_choice="Select module to run (0-!count!): "
+
+if "%mod_choice%"=="0" goto menu
+
+set "selected_mod="
+for /l %%i in (1,1,!count!) do (
+    if "%mod_choice%"=="%%i" set "selected_mod=!mod%%i!"
+)
+
+if defined selected_mod (
+    echo.
+    echo [INFO] Running module: !selected_mod! >> %LOGFILE%
+    echo Running !selected_mod!...
+    echo ----------------------------------------
+    python "module\!selected_mod!"
+    echo ----------------------------------------
+    echo Module execution finished.
+    pause
+    goto modules
+) else (
+    echo Invalid selection.
+    ping localhost -n 2 >nul
+    goto modules
+)
 
 :exit_app
 echo [INFO] Application closed normally. >> %LOGFILE%
