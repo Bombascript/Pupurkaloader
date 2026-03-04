@@ -49,7 +49,45 @@ echo.
 
 echo %GREEN% [ OK ] SYSTEM FULLY OPERATIONAL.%RESET%
 ping localhost -n 2 >nul
-goto menu
+goto check_license
+
+:check_license
+if exist pupurka_key.dat (
+    for /f "delims=" %%i in ('powershell -NoProfile -Command "try { $exp = [datetime]::Parse((Get-Content pupurka_key.dat -Raw).Trim()); if ((Get-Date) -lt $exp) { 'VALID' } else { 'EXPIRED' } } catch { 'EXPIRED' }"') do set "KEY_STATUS=%%i"
+    if "!KEY_STATUS!"=="VALID" goto menu
+    echo.
+    echo %RED% [!] Your license key has expired.%RESET%
+    del pupurka_key.dat
+    ping localhost -n 2 >nul
+)
+
+:prompt_key
+cls
+color 0F
+echo.
+echo  ================================================================
+echo                      ACTIVATION REQUIRED
+echo  ================================================================
+echo.
+echo    Please enter your license key to continue.
+echo    (Type 'exit' to close the terminal)
+echo.
+set "key_input="
+set /p key_input="  Key: "
+
+if /i "!key_input!"=="exit" goto exit_app
+if /i "!key_input!"=="test" (
+    powershell -NoProfile -Command "(Get-Date).AddMinutes(10).ToString('o')" > pupurka_key.dat
+    echo.
+    echo  [+] Key accepted! Access granted for 10 minutes.
+    ping localhost -n 2 >nul
+    goto menu
+) else (
+    echo.
+    echo  [!] Invalid key. Please try again.
+    ping localhost -n 2 >nul
+    goto prompt_key
+)
 
 :menu
 cls
