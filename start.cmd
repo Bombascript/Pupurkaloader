@@ -19,49 +19,52 @@ echo [INFO] Starting Pupurka Command Line Terminal... >> %LOGFILE%
 
 :boot
 cls
-echo Initializing system...
+echo exiting . . . . . . .. . . . . .. . . . . . . . .
 ping localhost -n 2 >nul
-echo Loading kernel modules... OK
-ping localhost -n 1 >nul
-echo Mounting file systems... OK
-ping localhost -n 1 >nul
-echo Starting network interface...
+echo exiting . . . . . . .. . . . . .. . . . . . . . .
 ping localhost -n 2 >nul
-echo ERROR: Failed to bind IPv6 address
-ping localhost -n 1 >nul
-echo Retrying network configuration...
+echo.
+<nul set /p ="Loading: "
+:: Цикл от 1 до 100. Каждые 12 чисел скрипт делает паузу в 1 секунду.
+:: Вместе с предыдущими паузами общая загрузка занимает ровно ~10 секунд.
+for /l %%i in (1,1,100) do (
+    <nul set /p ="%%i "
+    set /a "mod=%%i %% 12"
+    if !mod!==0 (
+        ping localhost -n 2 >nul
+    ) else (
+        for /l %%j in (1,1,1000) do rem
+    )
+)
+echo.
+echo.
+echo [ OK ] System loaded successfully.
 ping localhost -n 2 >nul
-echo Network interface started successfully.
-ping localhost -n 1 >nul
-echo Loading user profile...
-ping localhost -n 2 >nul
-echo ERROR: Profile corrupted, loading default
-ping localhost -n 1 >nul
-echo Starting Pupurka daemon...
-ping localhost -n 2 >nul
-echo [ OK ] Pupurka daemon started.
-ping localhost -n 2 >nul
+goto menu
 
 :menu
 cls
 echo.
-echo   _____   _   _   _____   _   _   ____    _  __      _    
-echo  ^|  __ \ ^| ^| ^| ^| ^|  __ \ ^| ^| ^| ^| ^|  _ \  ^| ^|/ /     / \   
-echo  ^| ^|__) ^|^| ^| ^| ^| ^| ^|__) ^|^| ^| ^| ^| ^| ^|_) ^| ^| ' /     / _ \  
-echo  ^|  ___/ ^| ^| ^| ^| ^|  ___/ ^| ^| ^| ^| ^|  _ ^<  ^|  ^<     / ___ \ 
-echo  ^| ^|     ^| ^|_^| ^| ^| ^|     ^| ^|_^| ^| ^| ^|_) ^| ^| . \   / /   \ \
-echo  ^|_^|      \___/  ^|_^|      \___/  ^|____/  ^|_^|\_\ /_/     \_\
+echo  ================================================================
 echo.
-echo main-v1.0.0-pupurka
+echo      _____   _   _   _____   _   _   ____    _  __      _    
+echo     ^|  __ \ ^| ^| ^| ^| ^|  __ \ ^| ^| ^| ^| ^|  _ \  ^| ^|/ /     / \   
+echo     ^| ^|__) ^|^| ^| ^| ^| ^| ^|__) ^|^| ^| ^| ^| ^| ^|_) ^| ^| ' /     / _ \  
+echo     ^|  ___/ ^| ^| ^| ^| ^|  ___/ ^| ^| ^| ^| ^|  _ ^<  ^|  ^<     / ___ \ 
+echo     ^| ^|     ^| ^|_^| ^| ^| ^|     ^| ^|_^| ^| ^| ^|_) ^| ^| . \   / /   \ \
+echo     ^|_^|      \___/  ^|_^|      \___/  ^|____/  ^|_^|\_\ /_/     \_\
 echo.
-echo   [1] Start Scan
-echo   [2] Configuration
-echo   [3] Update
-echo   [4] Exit
-echo   [5] Modules
+echo  ================================================================
+echo                        main-v1.0.0-pupurka
+echo  ================================================================
 echo.
-
-set /p choice="root@pupurka:~# "
+echo      [1] Start Scan                [4] Exit
+echo      [2] Configuration             [5] Modules
+echo      [3] Update
+echo.
+echo  ================================================================
+echo.
+set /p choice="  root@pupurka:~# "
 
 if "%choice%"=="1" goto scan
 if "%choice%"=="2" goto config
@@ -94,7 +97,11 @@ goto menu
 :config
 echo [INFO] User opened configuration >> %LOGFILE%
 echo.
-echo Configuration module loaded. (Simulation)
+echo  ========================================
+echo           CONFIGURATION MODULE
+echo  ========================================
+echo.
+echo  [ Simulation Mode Active ]
 echo.
 pause
 goto menu
@@ -141,27 +148,29 @@ goto menu
 cls
 echo [INFO] User opened modules menu >> %LOGFILE%
 echo.
-echo ========================================
-echo             AVAILABLE MODULES
-echo ========================================
+echo  ========================================
+echo              AVAILABLE MODULES
+echo  ========================================
 echo.
 
 set count=0
 for %%f in (module\*.py) do (
     set /a count+=1
     set "mod!count!=%%~nxf"
-    echo   [!count!] %%~nxf
+    echo    [!count!] %%~nxf
 )
 
 if !count!==0 (
-    echo   No Python modules found in the 'module' folder.
-    echo   Please add some .py files to the folder.
+    echo    No Python modules found in the 'module' folder.
+    echo    Please add some .py files to the folder.
 )
 
 echo.
-echo   [0] Back to Main Menu
+echo    [0] Back to Main Menu
 echo.
-set /p mod_choice="Select module to run (0-!count!): "
+echo  ========================================
+echo.
+set /p mod_choice="  Select module to run (0-!count!): "
 
 if "%mod_choice%"=="0" goto menu
 
