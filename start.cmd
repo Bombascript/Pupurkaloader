@@ -67,19 +67,23 @@ color 0F
 echo.
 echo  ================================================================
 echo.
-echo                   P U P U R K A   S E C U R I T Y
+echo      _____   _   _   _____   _   _   ____    _  __      _    
+echo     ^|  __ \ ^| ^| ^| ^| ^|  __ \ ^| ^| ^| ^| ^|  _ \  ^| ^|/ /     / \   
+echo     ^| ^|__) ^|^| ^| ^| ^| ^| ^|__) ^|^| ^| ^| ^| ^| ^|_) ^| ^| ' /     / _ \  
+echo     ^|  ___/ ^| ^| ^| ^| ^|  ___/ ^| ^| ^| ^| ^|  _ ^<  ^|  ^<     / ___ \ 
+echo     ^| ^|     ^| ^|_^| ^| ^| ^|     ^| ^|_^| ^| ^| ^|_) ^| ^| . \   / /   \ \
+echo     ^|_^|      \___/  ^|_^|      \___/  ^|____/  ^|_^|\_\ /_/     \_\
 echo.
 echo  ================================================================
 echo.
-echo    [!] SYSTEM LOCKED. ACTIVATION REQUIRED.
-echo.
-echo    Please enter a valid license key to unlock the terminal.
-echo    To exit the system, type 'exit'.
+echo    Welcome to Pupurka Terminal.
+echo    Please enter your license key to continue.
+echo    (Type 'exit' to close the application)
 echo.
 echo  ================================================================
 echo.
 set "key_input="
-set /p key_input="  [?] Enter Key: "
+set /p key_input="  [?] License Key: "
 
 if /i "!key_input!"=="exit" goto exit_app
 
