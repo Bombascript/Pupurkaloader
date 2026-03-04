@@ -66,25 +66,53 @@ cls
 color 0F
 echo.
 echo  ================================================================
-echo                      ACTIVATION REQUIRED
+echo.
+echo                   P U P U R K A   S E C U R I T Y
+echo.
 echo  ================================================================
 echo.
-echo    Please enter your license key to continue.
-echo    (Type 'exit' to close the terminal)
+echo    [!] SYSTEM LOCKED. ACTIVATION REQUIRED.
+echo.
+echo    Please enter a valid license key to unlock the terminal.
+echo    To exit the system, type 'exit'.
+echo.
+echo  ================================================================
 echo.
 set "key_input="
-set /p key_input="  Key: "
+set /p key_input="  [?] Enter Key: "
 
 if /i "!key_input!"=="exit" goto exit_app
-if /i "!key_input!"=="test" (
+
+:: URL to your raw GitHub file containing valid keys (one key per line)
+:: Example: https://raw.githubusercontent.com/Bombascript/Pupurkaloader/main/keys.txt
+set "KEYS_URL=https://raw.githubusercontent.com/Bombascript/Pupurkaloader/main/keys.txt"
+
+echo.
+echo  [*] Verifying key with remote server...
+ping localhost -n 2 >nul
+
+:: Download the keys file temporarily
+curl -s -L -o temp_keys.txt %KEYS_URL%
+
+set "KEY_VALID=false"
+if exist temp_keys.txt (
+    for /f "usebackq delims=" %%k in ("temp_keys.txt") do (
+        if /i "!key_input!"=="%%k" set "KEY_VALID=true"
+    )
+    del temp_keys.txt
+) else (
+    echo %RED% [!] ERROR: Could not connect to the key server.%RESET%
+    ping localhost -n 2 >nul
+    goto prompt_key
+)
+
+if "!KEY_VALID!"=="true" (
     powershell -NoProfile -Command "(Get-Date).AddMinutes(10).ToString('o')" > pupurka_key.dat
-    echo.
-    echo  [+] Key accepted! Access granted for 10 minutes.
+    echo %GREEN% [+] Key accepted! Access granted for 10 minutes.%RESET%
     ping localhost -n 2 >nul
     goto menu
 ) else (
-    echo.
-    echo  [!] Invalid key. Please try again.
+    echo %RED% [!] Invalid key. Access denied.%RESET%
     ping localhost -n 2 >nul
     goto prompt_key
 )
