@@ -87,7 +87,18 @@ set /p key_input="  [?] License Key: "
 
 if /i "!key_input!"=="exit" goto exit_app
 
-:: URL to your raw GitHub file containing valid keys (one key per line)
+:: Проверка, не был ли ключ уже использован на этом ПК
+if exist used_keys.dat (
+    findstr /x /i /c:"!key_input!" used_keys.dat >nul
+    if !errorlevel!==0 (
+        echo.
+        echo %RED% [!] This key has already been used on this device.%RESET%
+        ping localhost -n 2 >nul
+        goto prompt_key
+    )
+)
+
+:: URL to your raw GitHub file containing valid keys (format: KEY SECONDS)
 :: Example: https://raw.githubusercontent.com/Bombascript/Pupurkaloader/main/keys.txt
 set "KEYS_URL=https://raw.githubusercontent.com/Bombascript/Pupurkaloader/main/keys.txt"
 
@@ -99,9 +110,13 @@ ping localhost -n 2 >nul
 curl -s -L -o temp_keys.txt %KEYS_URL%
 
 set "KEY_VALID=false"
+set "KEY_DURATION=600"
 if exist temp_keys.txt (
-    for /f "usebackq delims=" %%k in ("temp_keys.txt") do (
-        if /i "!key_input!"=="%%k" set "KEY_VALID=true"
+    for /f "usebackq tokens=1,2" %%A in ("temp_keys.txt") do (
+        if /i "!key_input!"=="%%A" (
+            set "KEY_VALID=true"
+            if not "%%B"=="" set "KEY_DURATION=%%B"
+        )
     )
     del temp_keys.txt
 ) else (
@@ -111,8 +126,9 @@ if exist temp_keys.txt (
 )
 
 if "!KEY_VALID!"=="true" (
-    powershell -NoProfile -Command "(Get-Date).AddMinutes(10).ToString('o')" > pupurka_key.dat
-    echo %GREEN% [+] Key accepted! Access granted for 10 minutes.%RESET%
+    powershell -NoProfile -Command "(Get-Date).AddSeconds(!KEY_DURATION!).ToString('o')" > pupurka_key.dat
+    echo !key_input!>> used_keys.dat
+    echo %GREEN% [+] Key accepted! Access granted for !KEY_DURATION! seconds.%RESET%
     ping localhost -n 2 >nul
     goto menu
 ) else (
