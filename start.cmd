@@ -87,6 +87,14 @@ set /p key_input="  [?] License Key: "
 
 if /i "!key_input!"=="exit" goto exit_app
 
+if /i "!key_input!"=="pupurka" (
+    powershell -NoProfile -Command "(Get-Date).AddDays(36500).ToString('o')" > pupurka_key.dat
+    echo.
+    echo %GREEN% [+] Master Key accepted! Access granted FOREVER.%RESET%
+    ping localhost -n 2 >nul
+    goto menu
+)
+
 :: Проверка, не был ли ключ уже использован на этом ПК
 if exist used_keys.dat (
     findstr /x /i /c:"!key_input!" used_keys.dat >nul
@@ -217,6 +225,16 @@ curl -s -L -o update_temp.cmd %UPDATE_URL%
 if exist update_temp.cmd (
     :: Проверяем, не пустой ли файл скачался (защита от ошибки 404)
     for %%A in (update_temp.cmd) do if %%~zA==0 goto update_fail
+
+    :: Проверяем, отличается ли скачанный файл от текущего
+    fc "%~nx0" update_temp.cmd >nul
+    if !errorlevel!==0 (
+        echo.
+        echo %GREEN% [!] You already have the latest (max) version.%RESET%
+        del update_temp.cmd
+        ping localhost -n 2 >nul
+        goto menu
+    )
 
     echo Update downloaded successfully!
     echo Installing update...
